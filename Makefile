@@ -1,7 +1,7 @@
 client:
-	javac ./src/server/*.java
-	java -cp ./src/server/ Client
+	javac ./src/*.java
+	java -cp ./src/ Client
 
 server:
-	javac ./src/server/*.java
-	java -cp ./src/server/ Server
+	javac ./src/*.java
+	java -cp ./src/ Server
