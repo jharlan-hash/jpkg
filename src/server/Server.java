@@ -34,11 +34,22 @@ class Server {
 
         // Wait for a client to connect
         Socket clientSocket = serverSocket.accept();
+        DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 
-        Package[] currentList = getPackageList();
-        //TEST MODE
-        ClientRequest req = new ClientRequest(new Package("hi", "1.0", "fortnite", 0), new Package[0], 0);
+        Package[] currentList = getPackageList(); // get the current list of packages from the server
 
+        int requestLength = in.readInt();
+        ClientRequest req = ClientRequest.fromBytes(in.readNBytes(requestLength));
+
+        checkPackageListValidity(clientSocket, req, currentList);
+        checkPackageValidity(clientSocket, req);
+
+        System.out.println("Closing connection");
+        serverSocket.close();
+        clientSocket.close();
+    }
+
+    private static void checkPackageListValidity(Socket clientSocket, ClientRequest req, Package[] currentList) throws IOException {
         if (req.getPackageList() == null){
             // if they don't have a package list, send the package list
             sendPackageList(clientSocket);
@@ -52,35 +63,43 @@ class Server {
             sendPackageList(clientSocket);
             System.out.println("sent package list because of list mismatch");
         }
+    }
 
+    private static void checkPackageValidity(Socket clientSocket, ClientRequest req) throws IOException {
         if (req.getPackage() != null) {
             // if the client requested a package, send the package
             System.out.println("Client requested package");
             if (serverHasPackage(req.getPackage())) {
                 System.out.println("Server has package");
                 sendPackage(clientSocket, req.getPackage());
-                System.out.println("Sent package");
             } else {
-                System.out.println("Server does not have package");
                 sendError(clientSocket, "Package not found");
             }
         } else {
-            System.out.println("Invalid request");
             sendError(clientSocket, "Invalid request");
         }
-
-        System.out.println("Closing connection");
-        serverSocket.close();
-        clientSocket.close();
     }
 
     private static void sendError(Socket clientSocket, String errorMessage) throws IOException {
         DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+
+        System.out.println("Sending error message: " + errorMessage);
         out.writeUTF(errorMessage);
     }
 
     private static Package[] getPackageList() {
-        Package[] packageList = new Package[0];
+        Package[] packageList = {
+            new Package("package1", "1.0", "This is package 1", 0),
+            new Package("package2", "1.0", "This is package 2", 1),
+            new Package("package3", "1.0", "This is package 3", 2),
+            new Package("package4", "1.0", "This is package 4", 3),
+            new Package("package5", "1.0", "This is package 5", 4),
+            new Package("package6", "1.0", "This is package 6", 5),
+            new Package("package7", "1.0", "This is package 7", 6),
+            new Package("package8", "1.0", "This is package 8", 7),
+            new Package("package9", "1.0", "This is package 9", 8),
+            new Package("package10", "1.0", "This is package 10", 9)
+        };
         return packageList;
     }
 
@@ -90,10 +109,17 @@ class Server {
 
     private static void sendPackage(Socket clientSocket, Package packageToSend) {
         // Send the package to the client
+        System.out.println("Sent package");
     }
 
     private static boolean serverHasPackage(Package queriedPackage) {
         // Check if the server has the package
-        return true;
+        for (Package p : getPackageList()) {
+            if (p.getName().equals(queriedPackage.getName())) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
