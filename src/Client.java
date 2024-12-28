@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 class Client {
     public static Package[] currentList = {
@@ -26,19 +27,17 @@ class Client {
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress("localhost", 10000));
-        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Connected to server");
-
-        Package testPackage = new Package("fortnite level two", "1.0", "This is package 1", 0);
-        ClientRequest req = new ClientRequest(testPackage, currentList, System.currentTimeMillis() - 1000000);
-
-        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Sending request to server");
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        Scanner scanner = new Scanner(System.in);
+
+        Log.info("Connected to server");
+
+        System.out.println("Enter the name of the package you want to get from the server");
+        String testPackageName = scanner.nextLine();
+        ClientRequest req = new ClientRequest(testPackageName, currentList, System.currentTimeMillis() - 1000000);
 
         out.writeInt(req.toBytes().length);
-        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Wrote length");
-
         out.write(req.toBytes());
-        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Wrote request");
 
         DataInputStream in = new DataInputStream(socket.getInputStream());
         try {
@@ -46,9 +45,10 @@ class Client {
                 System.out.println(in.readUTF());
             }
         } catch (Exception e) {
-            System.out.println(Server.ANSI_YELLOW + "WARNING " + Server.ANSI_RESET + "Done reading");
+            Log.warn("Done reading");
         } finally {
-            System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Closing socket");
+            Log.info("Closing socket");
+            scanner.close();
             socket.close();
         }
     }

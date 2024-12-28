@@ -6,18 +6,18 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 class ClientRequest{
-    private Package packageReceived;
+    private String packageName;
     private Package[] packageList = null;
     private long lastUpdated;
 
-    public ClientRequest(Package packageReceived, Package[] packageList, long lastUpdated) {
-        this.packageReceived = packageReceived;
+    public ClientRequest(String packageName, Package[] packageList, long lastUpdated) {
+        this.packageName = packageName;
         this.packageList = packageList;
         this.lastUpdated = lastUpdated;
     }
 
-    public Package getPackage() {
-        return packageReceived;
+    public String getPackageName() {
+        return packageName;
     }
 
     public Package[] getPackageList() {
@@ -36,8 +36,8 @@ class ClientRequest{
         try (ByteArrayOutputStream bArrayOut = new ByteArrayOutputStream();
         DataOutputStream dataOut = new DataOutputStream(bArrayOut)) {
 
-            // Write packageReceived
-            writePackage(dataOut, packageReceived);
+            // Write packageName
+            writePackage(dataOut, packageName);
 
             // Write packageList
             dataOut.writeInt(packageList != null ? packageList.length : 0);
@@ -58,8 +58,8 @@ class ClientRequest{
         try (ByteArrayInputStream bArrayIn = new ByteArrayInputStream(bytes);
         DataInputStream dataIn = new DataInputStream(bArrayIn)) {
 
-            // Read packageReceived
-            Package packageReceived = readPackage(dataIn);
+            // Read packageName
+            String packageName = readString(dataIn);
 
             // Read packageList
             int listLength = dataIn.readInt();
@@ -71,8 +71,12 @@ class ClientRequest{
             // Read lastUpdated
             long lastUpdated = dataIn.readLong();
 
-            return new ClientRequest(packageReceived, packageList, lastUpdated);
+            return new ClientRequest(packageName, packageList, lastUpdated);
         }
+    }
+
+    private static void writePackage(DataOutputStream dataOut, String packageName) throws IOException {
+        writeString(dataOut, packageName);
     }
 
     private static void writePackage(DataOutputStream dataOut, Package pkg) throws IOException {

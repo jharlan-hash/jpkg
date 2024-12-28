@@ -12,22 +12,6 @@ import java.io.*;
 * The server will then close the connection with the client
 */
 class Server {    
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_LIGHT_YELLOW = "\u001B[93m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_BOLD = "\u001B[1m";
-    public static final String ANSI_UNBOLD = "\u001B[21m";
-    public static final String ANSI_UNDERLINE = "\u001B[4m";
-    public static final String ANSI_STOP_UNDERLINE = "\u001B[24m";
-    public static final String ANSI_BLINK = "\u001B[5m";
     private static int UPDATE_DELAY = 1209600000; // 2 weeks in millis
     private static int PORT_NUMBER = 10000;
 
@@ -45,8 +29,8 @@ class Server {
 
     private static void connect() throws Exception {
         ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
-        System.out.println("Server started on port " + PORT_NUMBER);
-        System.out.println("Waiting for client to connect...");
+        Log.info("Server started on port " + PORT_NUMBER);
+        Log.info("Waiting for client to connect...");
 
         // Wait for a client to connect
         Socket clientSocket = serverSocket.accept();
@@ -61,7 +45,7 @@ class Server {
         checkPackageListValidity(clientSocket, req, currentList);
         checkPackageValidity(clientSocket, req);
 
-        System.out.println("Closing connection");
+        Log.info("Closing connection");
         serverSocket.close();
         clientSocket.close();
     }
@@ -70,25 +54,25 @@ class Server {
         if (req.getPackageList() == null){
             // if they don't have a package list, send the package list
             sendPackageList(clientSocket);
-            System.out.println("Sent package list because user has no package list");
+            Log.warn("User has no package list - sending package list");
         } else if (req.timeSinceUpdate() > UPDATE_DELAY) {
             // if it's been a while since an update, send the package list
             sendPackageList(clientSocket);
-            System.out.println("sent package list because of time");
+            Log.warn("User's package list is outdated - sending package list");
         } else if (!req.getPackageList().equals(currentList)) {
             //temporaty for testing
             sendPackageList(clientSocket);
-            System.out.println("sent package list because of list mismatch");
+            Log.warn("User's package list is mismatched - sending package list");
         }
     }
 
     private static void checkPackageValidity(Socket clientSocket, ClientRequest req) throws IOException {
-        if (req.getPackage() != null) {
+        if (req.getPackageName() != null) {
             // if the client requested a package, send the package
-            System.out.println("Client requested package " + req.getPackage().getName());
-            if (serverHasPackage(req.getPackage())) {
-                System.out.println("Server has package " + req.getPackage().getName());
-                sendPackage(clientSocket, req.getPackage());
+            Log.info("Client requested package " + req.getPackageName());
+            if (serverHasPackage(req.getPackageName())) {
+                Log.info("Server has package " + req.getPackageName());
+                sendPackage(clientSocket, sendServerPackage(req.getPackageName()));
             } else {
                 sendError(clientSocket, "Package not found");
             }
@@ -100,8 +84,8 @@ class Server {
     private static void sendError(Socket clientSocket, String errorMessage) throws IOException {
         DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
-        System.out.println("Sending error message: " + errorMessage);
-        out.writeUTF(ANSI_RED + "ERROR " + ANSI_RESET + errorMessage);
+        Log.warn("Sending error message: " + errorMessage);
+        out.writeUTF(Log.ANSI_RED + "ERROR " + Log.ANSI_RESET + errorMessage);
     }
 
     private static Package[] getPackageList() {
@@ -120,23 +104,37 @@ class Server {
         return packageList;
     }
 
+    private static Package sendServerPackage(String packageName) {
+        // Get the package from the server
+        for (Package p : getPackageList()) {
+            if (p.getName().equals(packageName)) {
+                Log.info("Package " + packageName + " found");
+                return p;
+            }
+        }
+        Log.warn("Package not found");
+        return null;
+    }
+
     private static void sendPackageList(Socket clientSocket) {
         // Send the package list to the client
     }
 
-    private static void sendPackage(Socket clientSocket, Package packageToSend) {
+    private static void sendPackage(Socket clientSocket, Package packageToSend) throws IOException {
         // Send the package to the client
-        System.out.println("Sent package");
+        Log.info("Sending package " + packageToSend.getName());
+        DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+        out.writeUTF(Log.ANSI_GREEN + "INFO" + Log.ANSI_RESET + "Package " + packageToSend.getName() + " sent");
     }
 
-    private static boolean serverHasPackage(Package queriedPackage) {
+    private static boolean serverHasPackage(String packageName) {
         // Check if the server has the package
         for (Package p : getPackageList()) {
-            if (p.getName().equals(queriedPackage.getName())) {
+            if (p.getName().equals(packageName)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }
