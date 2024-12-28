@@ -26,25 +26,30 @@ class Client {
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress("localhost", 10000));
-        System.out.println("Connected to server");
+        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Connected to server");
 
-        Package testPackage = new Package("package1", "1.0", "This is package 1", 0);
+        Package testPackage = new Package("fortnite level two", "1.0", "This is package 1", 0);
         ClientRequest req = new ClientRequest(testPackage, currentList, System.currentTimeMillis() - 1000000);
 
-        System.out.println("Sending request to server");
+        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Sending request to server");
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
         out.writeInt(req.toBytes().length);
-        System.out.println("Wrote length");
+        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Wrote length");
 
         out.write(req.toBytes());
-        System.out.println("Wrote request");
+        System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Wrote request");
 
         DataInputStream in = new DataInputStream(socket.getInputStream());
-        while(in.available() != 0) {
-            in.readUTF();
+        try {
+            while(true) {
+                System.out.println(in.readUTF());
+            }
+        } catch (Exception e) {
+            System.out.println(Server.ANSI_YELLOW + "WARNING " + Server.ANSI_RESET + "Done reading");
+        } finally {
+            System.out.println(Server.ANSI_GREEN + "INFO " + Server.ANSI_RESET + "Closing socket");
+            socket.close();
         }
-
-        socket.close();
     }
 }

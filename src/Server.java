@@ -11,7 +11,23 @@ import java.io.*;
 * If the server does not have the package, the server will send the client a message saying that the package is not available
 * The server will then close the connection with the client
 */
-class Server {
+class Server {    
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_LIGHT_YELLOW = "\u001B[93m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_BOLD = "\u001B[1m";
+    public static final String ANSI_UNBOLD = "\u001B[21m";
+    public static final String ANSI_UNDERLINE = "\u001B[4m";
+    public static final String ANSI_STOP_UNDERLINE = "\u001B[24m";
+    public static final String ANSI_BLINK = "\u001B[5m";
     private static int UPDATE_DELAY = 1209600000; // 2 weeks in millis
     private static int PORT_NUMBER = 10000;
 
@@ -35,6 +51,7 @@ class Server {
         // Wait for a client to connect
         Socket clientSocket = serverSocket.accept();
         DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+        DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
 
         Package[] currentList = getPackageList(); // get the current list of packages from the server
 
@@ -68,9 +85,9 @@ class Server {
     private static void checkPackageValidity(Socket clientSocket, ClientRequest req) throws IOException {
         if (req.getPackage() != null) {
             // if the client requested a package, send the package
-            System.out.println("Client requested package");
+            System.out.println("Client requested package " + req.getPackage().getName());
             if (serverHasPackage(req.getPackage())) {
-                System.out.println("Server has package");
+                System.out.println("Server has package " + req.getPackage().getName());
                 sendPackage(clientSocket, req.getPackage());
             } else {
                 sendError(clientSocket, "Package not found");
@@ -84,7 +101,7 @@ class Server {
         DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
         System.out.println("Sending error message: " + errorMessage);
-        out.writeUTF(errorMessage);
+        out.writeUTF(ANSI_RED + "ERROR " + ANSI_RESET + errorMessage);
     }
 
     private static Package[] getPackageList() {
