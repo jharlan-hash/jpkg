@@ -1,3 +1,5 @@
+package com.jacksovern.jpkg;
+
 class Request {
     private Package pack;
     private int timeSinceUpdate;
