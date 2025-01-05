@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ListManager {
     private Socket socket;
     private String PACKAGE_PATH = "~/.local/share/jpkglist";
-    private ArrayList<Package> packageList;
+    private ArrayList<Package> packageList = new ArrayList<>();
 
     public ListManager(Socket socket) {
         this.socket = socket;
@@ -45,9 +45,10 @@ public class ListManager {
         int listlen = dataIn.readInt();
 
         for (int i = 0; i < listlen; i++) { // Read package list
+            System.out.println("Reading package " + i);
             String json = dataIn.readUTF();
 
-            Package pack = Request.fromJSON(json); // convert data to package object
+            Package pack = Package.fromJSON(json); // convert data to package object
             System.out.println(pack.toJSON());
             packageList.add(pack); // add package to list
         }

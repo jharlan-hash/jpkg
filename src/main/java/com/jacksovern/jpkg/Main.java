@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] a) {
+    public static void main(String[] a) throws Exception {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter 's' to start the server or 'c' to start the client: ");
         String inputstring = scan.nextLine();
