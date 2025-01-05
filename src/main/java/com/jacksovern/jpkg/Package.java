@@ -1,9 +1,8 @@
 package com.jacksovern.jpkg;
 
-import java.io.Serializable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class Package implements Serializable {
+class Package {
     private String name;
     private String version;
     private String description;
