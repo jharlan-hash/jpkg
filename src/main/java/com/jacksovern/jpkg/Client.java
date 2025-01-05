@@ -31,7 +31,7 @@ class Client {
                         getPackageList();
                         break;
                     case "2":
-                        System.out.print("Enter package name to download: ");
+                        System.out.print("Enter a package name to download: ");
                         String packageName = scanner.nextLine();
                         downloadPackage(packageName);
                         break;
