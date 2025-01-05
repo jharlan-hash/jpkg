@@ -7,14 +7,14 @@ class Client {
     private final Socket socket;
     private final DataInputStream dataIn;
     private final DataOutputStream dataOut;
-    
+
     public Client(String host, int port) throws IOException {
         this.socket = new Socket(host, port);
         this.dataIn = new DataInputStream(socket.getInputStream());
         this.dataOut = new DataOutputStream(socket.getOutputStream());
         System.out.println("Connected to server at " + host + ":" + port);
     }
-    
+
     public void start() {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -23,9 +23,9 @@ class Client {
                 System.out.println("2. Download package");
                 System.out.println("3. Exit");
                 System.out.print("Choose an option: ");
-                
+
                 String choice = scanner.nextLine();
-                
+
                 switch (choice) {
                     case "1":
                         getPackageList();
@@ -47,11 +47,11 @@ class Client {
             close();
         }
     }
-    
+
     private void getPackageList() throws IOException {
         dataOut.writeUTF("getPackageList");
         dataOut.flush();
-        
+
         int numPackages = dataIn.readInt();
         System.out.println("\nAvailable packages:");
         for (int i = 0; i < numPackages; i++) {
@@ -59,21 +59,21 @@ class Client {
             System.out.println(packageInfo);
         }
     }
-    
+
     private void downloadPackage(String packageName) throws IOException {
         dataOut.writeUTF(packageName);
         dataOut.flush();
-        
+
         receiveFile(packageName + ".zip");
     }
-    
+
     private void receiveFile(String fileName) throws IOException {
         long size = dataIn.readLong();
         if (size == -1) {
             System.out.println("File not found on server");
             return;
         }
-        
+
         System.out.println("Receiving file: " + fileName + " (size: " + size + " bytes)");
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
             byte[] buffer = new byte[4*1024];
@@ -86,7 +86,7 @@ class Client {
         }
         System.out.println("File received: " + fileName);
     }
-    
+
     private void close() {
         try {
             if (dataIn != null) dataIn.close();
@@ -96,7 +96,7 @@ class Client {
             System.err.println("Error closing resources: " + e.getMessage());
         }
     }
-    
+
     public static void main(String[] args) {
         try {
             Client client = new Client("localhost", 1234);

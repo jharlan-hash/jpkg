@@ -10,11 +10,9 @@ class Server {
         System.out.println("Server is running...");
         try (ServerSocket serverSocket = new ServerSocket(1234)) {
             while (true) {
-                // Accept new connection
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected: " + socket.getInetAddress());
                 
-                // Create a new thread to handle this client
                 Thread clientHandler = new Thread(() -> handleClient(socket));
                 clientHandler.start();
             }
@@ -43,7 +41,6 @@ class Server {
                         sendFile(pack.getName() + ".zip", dataOut);
                     } else {
                         System.out.println("Package not found: " + request);
-                        // Optionally send an error message to client
                         dataOut.writeUTF("ERROR: Package not found");
                     }
                 }
@@ -78,9 +75,11 @@ class Server {
         packageList.add(new Package("test2", "1.0", "Test package 2", 1));
         
         dataOut.writeInt(packageList.size());
+
         for (Package pack : packageList) {
             dataOut.writeUTF(pack.toJSON());
         }
+
         dataOut.flush();
         System.out.println("Package list sent.");
     }
