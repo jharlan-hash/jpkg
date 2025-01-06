@@ -64,7 +64,7 @@ class Client {
         dataOut.writeUTF(packageName);
         dataOut.flush();
 
-        receiveFile(packageName + ".zip");
+        receiveFile(packageName);
     }
 
     private void receiveFile(String fileName) throws IOException {

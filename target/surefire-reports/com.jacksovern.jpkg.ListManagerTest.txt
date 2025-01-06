@@ -1,0 +1,58 @@
+-------------------------------------------------------------------------------
+Test set: com.jacksovern.jpkg.ListManagerTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.024 s <<< FAILURE! -- in com.jacksovern.jpkg.ListManagerTest
+com.jacksovern.jpkg.ListManagerTest.testGetPackageListFromServer -- Time elapsed: 0.017 s <<< ERROR!
+java.lang.reflect.InaccessibleObjectException: Unable to make private java.net.Socket(java.lang.Void,java.net.SocketImpl) accessible: module java.base does not "opens java.net" to unnamed module @2353b3e6
+	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:388)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:364)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:312)
+	at java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:194)
+	at java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:187)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:59)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.imposterise(ClassImposterizer.java:49)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:54)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:44)
+	at org.mockito.Mockito.mock(Mockito.java:882)
+	at org.mockito.Mockito.mock(Mockito.java:777)
+	at com.jacksovern.jpkg.ListManagerTest.setUp(ListManagerTest.java:25)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+
+com.jacksovern.jpkg.ListManagerTest.testGetPackageList_FileNotExists -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.reflect.InaccessibleObjectException: Unable to make private java.net.Socket(java.lang.Void,java.net.SocketImpl) accessible: module java.base does not "opens java.net" to unnamed module @2353b3e6
+	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:388)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:364)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:312)
+	at java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:194)
+	at java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:187)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:59)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.imposterise(ClassImposterizer.java:49)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:54)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:44)
+	at org.mockito.Mockito.mock(Mockito.java:882)
+	at org.mockito.Mockito.mock(Mockito.java:777)
+	at com.jacksovern.jpkg.ListManagerTest.setUp(ListManagerTest.java:25)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+
+com.jacksovern.jpkg.ListManagerTest.testGetPackageList_FileExists -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.reflect.InaccessibleObjectException: Unable to make private java.net.Socket(java.lang.Void,java.net.SocketImpl) accessible: module java.base does not "opens java.net" to unnamed module @2353b3e6
+	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:388)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:364)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:312)
+	at java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:194)
+	at java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:187)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:59)
+	at org.mockito.internal.creation.jmock.ClassImposterizer.imposterise(ClassImposterizer.java:49)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:54)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:44)
+	at org.mockito.Mockito.mock(Mockito.java:882)
+	at org.mockito.Mockito.mock(Mockito.java:777)
+	at com.jacksovern.jpkg.ListManagerTest.setUp(ListManagerTest.java:25)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+

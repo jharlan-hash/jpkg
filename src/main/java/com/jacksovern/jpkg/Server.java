@@ -38,7 +38,7 @@ class Server {
                 } else {
                     Package pack = findPackage(request);
                     if (pack != null) {
-                        sendFile(pack.getName() + ".zip", dataOut);
+                        sendFile("packages/" + pack.getName(), dataOut);
                     } else {
                         System.out.println("Package not found: " + request);
                         dataOut.writeUTF("ERROR: Package not found");
@@ -71,13 +71,13 @@ class Server {
     }
 
     private static void sendPackageList(DataOutputStream dataOut) throws IOException {
-        packageList.add(new Package("test", "1.0", "Test package", 1));
+        packageList.add(new Package("wget", "1.0", "this is the wget package", 1));
         packageList.add(new Package("test2", "1.0", "Test package 2", 1));
         
-        dataOut.writeInt(packageList.size());
+        dataOut.writeInt(packageList.size()); // Send package list size
 
-        for (Package pack : packageList) {
-            dataOut.writeUTF(pack.toJSON());
+        for (Package pack : packageList) { // convert package to JSON and send
+            dataOut.writeUTF(pack.toJSON()); 
         }
 
         dataOut.flush();
