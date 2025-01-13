@@ -9,6 +9,8 @@ class Server {
     public static void main(String[] args) throws Exception {
         System.out.println("Server is running...");
         try (ServerSocket serverSocket = new ServerSocket(1234)) {
+            packageList.add(new Package("wget", "1.0", "this is the wget package", 1));
+            packageList.add(new Package("test2", "1.0", "Test package 2", 1));
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected: " + socket.getInetAddress());
@@ -71,8 +73,6 @@ class Server {
     }
 
     private static void sendPackageList(DataOutputStream dataOut) throws IOException {
-        packageList.add(new Package("wget", "1.0", "this is the wget package", 1));
-        packageList.add(new Package("test2", "1.0", "Test package 2", 1));
         
         dataOut.writeInt(packageList.size()); // Send package list size
 

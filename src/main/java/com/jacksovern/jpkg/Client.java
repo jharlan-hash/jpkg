@@ -1,9 +1,11 @@
 package com.jacksovern.jpkg;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
 class Client {
+
     private final Socket socket;
     private final DataInputStream dataIn;
     private final DataOutputStream dataOut;
@@ -58,6 +60,8 @@ class Client {
             String packageInfo = dataIn.readUTF();
             System.out.println(packageInfo);
         }
+
+        numPackages = 0;
     }
 
     private void downloadPackage(String packageName) throws IOException {
@@ -74,14 +78,28 @@ class Client {
             return;
         }
 
-        System.out.println("Receiving file: " + fileName + " (size: " + size + " bytes)");
-        try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
-            byte[] buffer = new byte[4*1024];
+        System.out.println(
+            "Receiving file: " + fileName + " (size: " + size + " bytes)"
+        );
+        try (
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName)
+        ) {
+            byte[] buffer = new byte[4 * 1024];
             int bytes;
-            while (size > 0 && (bytes = dataIn.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+            while (
+                size > 0 &&
+                (bytes = dataIn.read(
+                        buffer,
+                        0,
+                        (int) Math.min(buffer.length, size)
+                    )) !=
+                -1
+            ) {
                 fileOutputStream.write(buffer, 0, bytes);
                 size -= bytes;
-                System.out.println("Received " + bytes + " bytes, " + size + " remaining");
+                System.out.println(
+                    "Received " + bytes + " bytes, " + size + " remaining"
+                );
             }
         }
         System.out.println("File received: " + fileName);
