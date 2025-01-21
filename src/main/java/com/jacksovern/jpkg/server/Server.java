@@ -1,4 +1,4 @@
-package com.jacksovern.jpkg;
+package com.jacksovern.jpkg.server;
 import java.net.*;
 import java.util.ArrayList;
 import java.io.*;

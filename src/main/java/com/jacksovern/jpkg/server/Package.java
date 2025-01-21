@@ -1,4 +1,4 @@
-package com.jacksovern.jpkg;
+package com.jacksovern.jpkg.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

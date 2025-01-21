@@ -1,4 +1,4 @@
-package com.jacksovern.jpkg;
+package com.jacksovern.jpkg.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
